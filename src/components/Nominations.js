@@ -1,24 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Nominations = ({ nominations }) => {
-  console.log(nominations);
-  return (
-    <div>
-      <h2>Nominations</h2>
-      <ul>
-        {nominations
-          ? nominations.map((item) => (
-              <li key={item.imdbID}>
-                {item.Title} {item.Year} <div>Delete</div>
-              </li>
-            ))
-          : 'Select a movie to nominate'}
-      </ul>
-    </div>
-  );
-};
-
+const Nominations = ({ nominations, removeMovieFromNominations }) => (
+  <div>
+    <h2>Nominations</h2>
+    <ul>
+      {nominations
+        ? nominations.map((movie) => (
+            <li key={movie.imdbID}>
+              {movie.Title} {movie.Year}{' '}
+              <button type="submit" onClick={() => removeMovieFromNominations(movie.imdbID)}>
+                Delete
+              </button>
+            </li>
+          ))
+        : 'Select a movie to nominate'}
+    </ul>
+  </div>
+);
 Nominations.propTypes = {
   nominations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -29,6 +28,7 @@ Nominations.propTypes = {
       Poster: PropTypes.string.isRequired,
     })
   ).isRequired,
+  removeMovieFromNominations: PropTypes.func.isRequired,
 };
 
 export default Nominations;

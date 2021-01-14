@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import Search from './components/Search';
 import Results from './components/Results';
 import Nominations from './components/Nominations';
+import Pagination from './components/Pagination';
 
 const API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 
 function App() {
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
-  // const [totalResults, setTotalResults] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [nominations, setNominations] = useState([]);
+  const [totalResults, setTotalResults] = useState(null);
 
-  const searchMovies = async (movieTitle) => {
+  const getSearchResults = async (searchedTitle, resultsPage) => {
     const data = await axios.get(
-      `http://www.omdbapi.com/?apikey=${API_KEY}&s=${movieTitle}&type=movie`
+      `https://www.omdbapi.com/?apikey=${API_KEY}&s=${searchedTitle}&type=movie&page=${resultsPage}`
     );
-    setTitle(movieTitle);
+
+    setTotalResults(data.data.totalResults);
     setSearchResults(data.data.Search);
-    // setTotalResults(data.data.totalResults);
+  };
+
+  const searchMovieTitle = async (e) => {
+    e.preventDefault();
+
+    getSearchResults(e.target.title.value, 1);
+    setTitle(e.target.title.value);
+    setCurrentPage(1);
   };
 
   const addMovieToNominations = (movie) => {
@@ -35,12 +44,17 @@ function App() {
     setNominations((prevState) => [...prevState, movie]);
   };
 
-  // const removeMovieFromNominations
+  const removeMovieFromNominations = (movieId) => {
+    const newNominations = nominations.filter((movie) => movie.imdbID !== movieId);
+    setNominations(newNominations);
+  };
 
   return (
     <div>
       <h1>The Shoppies</h1>
-      <Search searchMovies={searchMovies} />
+      <form onSubmit={(e) => searchMovieTitle(e)}>
+        <input name="title" type="text" />
+      </form>
       {searchResults ? (
         <Results
           searchResults={searchResults}
@@ -51,7 +65,20 @@ function App() {
       ) : (
         <h2>Search for Movies</h2>
       )}
-      <Nominations nominations={nominations} />
+      {searchResults && (
+        <Pagination
+          key={title}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          title={title}
+          getSearchResults={getSearchResults}
+          totalResults={totalResults}
+        />
+      )}
+      <Nominations
+        nominations={nominations}
+        removeMovieFromNominations={removeMovieFromNominations}
+      />
     </div>
   );
 }
