@@ -1,32 +1,21 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import Results from './components/Results';
 import Nominations from './components/Nominations';
 import Pagination from './components/Pagination';
 
-const API_KEY = process.env.REACT_APP_OMDB_API_KEY;
+import useFetch from './components/useFetch';
 
 function App() {
   const [title, setTitle] = useState(null);
-  const [searchResults, setSearchResults] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [nominations, setNominations] = useState([]);
-  const [totalResults, setTotalResults] = useState(null);
+  const { data } = useFetch(title, currentPage);
+  const { searchResults, totalResults } = data;
 
-  const getSearchResults = async (searchedTitle, resultsPage) => {
-    const data = await axios.get(
-      `https://www.omdbapi.com/?apikey=${API_KEY}&s=${searchedTitle}&type=movie&page=${resultsPage}`
-    );
-
-    setTotalResults(data.data.totalResults);
-    setSearchResults(data.data.Search);
-  };
-
-  const searchMovieTitle = async (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
 
-    getSearchResults(e.target.title.value, 1);
     setTitle(e.target.title.value);
     setCurrentPage(1);
   };
@@ -52,7 +41,7 @@ function App() {
   return (
     <div>
       <h1>The Shoppies</h1>
-      <form onSubmit={(e) => searchMovieTitle(e)}>
+      <form onSubmit={(e) => handleSearchSubmit(e)}>
         <input name="title" type="text" />
       </form>
       {searchResults ? (
@@ -60,7 +49,6 @@ function App() {
           searchResults={searchResults}
           title={title}
           addMovieToNominations={addMovieToNominations}
-          // totalResults={totalResults}
         />
       ) : (
         <h2>Search for Movies</h2>
@@ -71,7 +59,7 @@ function App() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           title={title}
-          getSearchResults={getSearchResults}
+          // getSearchResults={getSearchResults}
           totalResults={totalResults}
         />
       )}
