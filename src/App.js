@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 
 import Results from './components/Results';
 import Nominations from './components/Nominations';
-import Pagination from './components/Pagination';
+import PaginationButtons from './components/Pagination';
 
 import useFetch from './components/useFetch';
 
 function App() {
   const [title, setTitle] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [nominations, setNominations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data } = useFetch(title, currentPage);
   const { searchResults, totalResults } = data;
 
@@ -18,6 +19,16 @@ function App() {
 
     setTitle(e.target.title.value);
     setCurrentPage(1);
+  };
+
+  const pageToBeSet = (type, index) => {
+    if (type === 'previous') {
+      setCurrentPage((prevPage) => prevPage - 1);
+    } else if (type === 'next') {
+      setCurrentPage((prevPage) => prevPage + 1);
+    } else {
+      setCurrentPage(index);
+    }
   };
 
   const addMovieToNominations = (movie) => {
@@ -54,13 +65,13 @@ function App() {
         <h2>Search for Movies</h2>
       )}
       {searchResults && (
-        <Pagination
-          key={title}
+        <PaginationButtons
+          // key={title}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           title={title}
-          // getSearchResults={getSearchResults}
           totalResults={totalResults}
+          pageToBeSet={pageToBeSet}
         />
       )}
       <Nominations
