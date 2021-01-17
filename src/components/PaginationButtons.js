@@ -16,6 +16,7 @@ const PaginationButtons = ({ totalResults, currentPage, setCurrentPage }) => {
         count={pageCount}
         shape="rounded"
         page={currentPage}
+        size="small"
         onChange={pageNumberToBeSet}
       />
     </div>
@@ -23,9 +24,9 @@ const PaginationButtons = ({ totalResults, currentPage, setCurrentPage }) => {
 };
 
 PaginationButtons.propTypes = {
-  currentPage: PropTypes.number.isRequired,
-  totalResults: PropTypes.string.isRequired,
-  setCurrentPage: PropTypes.func.isRequired,
+  currentPage: PropTypes.number,
+  totalResults: PropTypes.string,
+  setCurrentPage: PropTypes.func,
 };
 
 export default PaginationButtons;

@@ -60,12 +60,3 @@ const useFetch = (query, queryPage) => {
 };
 
 export default useFetch;
-
-
-/*
-  TODO:
-  move state to global context
-  create hook usable in app and pagination
-
-  material ui default buttons
-*/
