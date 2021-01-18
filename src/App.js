@@ -13,7 +13,6 @@ import search from './assets/icons/search.svg';
 const PageContainer = styled.div`
   background: #efefef;
   min-height: 100vh;
-  padding-bottom: 4rem;
 `;
 
 const Wrapper = styled.main`
@@ -21,6 +20,7 @@ const Wrapper = styled.main`
   margin: 0 auto;
   padding-top: 2rem;
   position: relative;
+    padding-bottom: 4rem;
 
   @media screen and (min-width: 768px) {
     width: 600px;
