@@ -13,7 +13,6 @@ import search from './assets/icons/search.svg';
 const PageContainer = styled.div`
   background: #efefef;
   min-height: 100vh;
-  width: 100vw;
   padding-bottom: 4rem;
 `;
 
